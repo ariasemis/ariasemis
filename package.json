@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {},
+  "author": "Arias Emilio",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/core": "^10.0.35",
+    "@emotion/styled": "^10.0.27",
+    "@octokit/rest": "^18.0.6",
+    "svg-term": "^2.0.3",
+    "svgo": "^1.3.2",
+    "term-schemes": "^1.2.1"
+  }
+}
