@@ -1,0 +1,35 @@
+name: self-update
+
+on: workflow_dispatch
+
+jobs:
+  update:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Cache Node modules
+      uses: actions/cache@v2
+      with: 
+        path: ~/.npm
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
+    - name: Install dependencies
+      run: npm ci
+    - name: Run update
+      run: node script.js
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v4
+      with:
+        message: "Updated terminal session"
+        add: "*.svg"
