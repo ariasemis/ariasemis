@@ -28,10 +28,9 @@ function mergeObj(first, second) {
     return obj
 }
 
-// TODO: replace with authenticated user repos
-function getGithubRepos(octo, username) {
+function getGithubRepos(octo) {
     return octo.repos
-        .listForUser({ username })
+        .listForAuthenticatedUser()
         .then(response => response.data);
 }
 
@@ -41,10 +40,10 @@ function getGithubRepoLangs(octo, repo) {
         .then(response => response.data);
 }
 
-function getGithubLangs(octo, username) {
+function getGithubLangs(octo) {
     console.log('fetch github langs');
 
-    return getGithubRepos(octo, username)
+    return getGithubRepos(octo)
         .then(repos => Promise.all(
             repos.map(r => getGithubRepoLangs(octo, r))
         ))
@@ -117,9 +116,11 @@ function writeSvg(cast) {
 
 // run
 
-const octokit = new Octokit(); // TODO: auth: "secret123"
+const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN
+});
 
-getGithubLangs(octokit, 'ariasemis')
+getGithubLangs(octokit)
     .then(langs => calculateLangUsage(langs))
     .then(langs => drawLangUsage(langs))
     .then(langs => createCast(langs))
